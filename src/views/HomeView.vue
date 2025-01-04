@@ -1,5 +1,13 @@
 <script setup lang="ts">
-import TheWelcome from '../components/TheWelcome.vue'
+import axios from 'axios'
+
+async function load() {
+  const sdfsdf = await axios.get('/')
+  console.log(sdfsdf)
+  const axiosResponse = await axios.get('/list/schueler')
+  console.log(axiosResponse)
+}
+void load()
 </script>
 
 <template>

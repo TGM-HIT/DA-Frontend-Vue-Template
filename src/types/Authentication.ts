@@ -1,0 +1,91 @@
+export type Authentication = {
+  authorities: Authority[]
+  details: AuthenticationDetails
+  authenticated: boolean
+  principal: string
+  keyHash: number
+  credentials: string
+  name: string
+}
+
+export type Authority = {
+  authority: string
+}
+
+export type AuthenticationDetails = {
+  "id": string,
+  "memberOf": string[],
+  "groups": null,
+  "cn": string,
+  "sn": string,
+  "accountExpires": string,
+  "badPasswordTime": string,
+  "badPwdCount": string,
+  "codePage": string,
+  "countryCode": string,
+  "displayName": string,
+  "distinguishedName": string,
+  "employeeNumber": string,
+  "employeeType": string,
+  "extensionAttribute2": string,
+  "extensionAttribute4": string,
+  "extensionAttribute5": string,
+  "givenName": string,
+  "homeDirectory": string,
+  "homeDrive": string,
+  "homeMDB": string,
+  "info": string,
+  "instanceType": string,
+  "l": string,
+  "lastLogoff": string,
+  "lastLogon": string,
+  "lastLogonTimestamp": string,
+  "legacyExchangeDN": string,
+  "logonCount": string,
+  "mail": string,
+  "mailNickname": string,
+  "msDSExternalDirectoryObjectId": string,
+  "msExchArchiveQuota": string,
+  "msExchArchiveWarnQuota": string,
+  "msExchCalendarLoggingQuota": string,
+  "msExchDumpsterQuota": string,
+  "msExchDumpsterWarningQuota": string,
+  "msExchELCMailboxFlags": string,
+  "msExchHideFromAddressLists": string,
+  "msExchHomeServerName": string,
+  "msExchMailboxGuid": string,
+  "msExchMailboxSecurityDescriptor": string,
+  "msExchMobileMailboxFlags": string,
+  "msExchPoliciesIncluded": string,
+  "msExchRBACPolicyLink": string,
+  "msExchRecipientDisplayType": string,
+  "msExchRecipientTypeDetails": string,
+  "msExchSafeSendersHash": string,
+  "msExchSharingAnonymousIdentities": string,
+  "msExchTextMessagingState": string[],
+  "msExchUMDtmfMap": string[],
+  "msExchUserAccountControl": string,
+  "msExchUserCulture": string,
+  "msExchVersion": string,
+  "msExchWhenMailboxCreated": string,
+  "name": string,
+  "objectCategory": string,
+  "objectClass": string[],
+  "objectGUID": string,
+  "objectSid": string,
+  "primaryGroupID": string,
+  "profilePath": string,
+  "protocolSettings": string,
+  "proxyAddresses": string[],
+  "pwdLastSet": string,
+  "showInAddressBook": string[],
+  "userAccountControl": string,
+  "userPrincipalName": string,
+  "mdbuseDefaults": string,
+  "dscorePropagationData": string[],
+  "msdsconsistencyGuid": string,
+  "samaccountName": string,
+  "samaccountType": string,
+  "usnchanged": string,
+  "usncreated": string
+}

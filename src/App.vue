@@ -1,85 +1,44 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
+import { useTheme } from 'vuetify'
+import { useAuthenticationStore } from '@/stores/AuthenticationStore.ts'
+
+const authenticationStore = useAuthenticationStore()
+
+const theme = useTheme()
+
+function toggleTheme() {
+  theme.global.name.value = theme.global.current.value.dark ? 'light' : 'dark'
+}
 </script>
 
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
+  <v-layout>
+    <v-app-bar color="primary" density="compact">
+      <v-app-bar-title>DA-Frontend-Vue-Template</v-app-bar-title>
 
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
+      <router-link to="/about" v-slot="{ href, route, navigate }">
+        <v-btn :href="href" @click="navigate">
+          {{ route.name }}
+        </v-btn>
+      </router-link>
 
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-      </nav>
-    </div>
-  </header>
-
-  <RouterView />
+      <template v-slot:append>
+        <v-btn icon="mdi-theme-light-dark" @click="toggleTheme"></v-btn>
+        <v-btn v-if="authenticationStore.loggedIn" @click="authenticationStore.logout"
+          >Logout</v-btn
+        >
+        <router-link v-else to="/login" v-slot="{ href, route, navigate }">
+          <v-btn :href="href" @click="navigate">
+            {{ route.name }}
+          </v-btn>
+        </router-link>
+      </template>
+    </v-app-bar>
+    <v-main>
+      <RouterView />
+    </v-main>
+  </v-layout>
 </template>
 
-<style scoped>
-header {
-  line-height: 1.5;
-  max-height: 100vh;
-}
-
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-nav {
-  width: 100%;
-  font-size: 12px;
-  text-align: center;
-  margin-top: 2rem;
-}
-
-nav a.router-link-exact-active {
-  color: var(--color-text);
-}
-
-nav a.router-link-exact-active:hover {
-  background-color: transparent;
-}
-
-nav a {
-  display: inline-block;
-  padding: 0 1rem;
-  border-left: 1px solid var(--color-border);
-}
-
-nav a:first-of-type {
-  border: 0;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-
-  nav {
-    text-align: left;
-    margin-left: -1rem;
-    font-size: 1rem;
-
-    padding: 1rem 0;
-    margin-top: 1rem;
-  }
-}
-</style>
+<style scoped></style>
