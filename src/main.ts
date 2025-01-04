@@ -31,7 +31,12 @@ axios.interceptors.request.use((request) => {
 axios.interceptors.response.use(null, (error) => {
   console.log('axios.interceptors.response error', error)
   if (error.response.status == 401) {
+    alert('You must be logged-in to view this resource')
+    //alert(error.response.data)
     router.push('/login')
+  }
+  if (error.response.status == 403) {
+    alert('You are not allowed to view this resource')
   }
   return error
 })

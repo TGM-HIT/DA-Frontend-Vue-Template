@@ -2,21 +2,20 @@
 import axios from 'axios'
 import { ref } from 'vue'
 
-const currentUser = ref(null)
+const schueler = ref(null)
 
 async function load() {
-  const response = await axios.get('/')
+  const response = await axios.get('/list/schueler')
   if (response.status == 200) {
-    currentUser.value = response.data
+    schueler.value = response.data
   }
 }
 void load()
 </script>
 
 <template>
-  <main>
-    {{ currentUser }}
-  </main>
+  <h1>Only visible for logged-in user</h1>
+  <div>{{ schueler }}</div>
 </template>
 
 <style scoped></style>

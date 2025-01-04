@@ -17,7 +17,13 @@ function toggleTheme() {
     <v-app-bar color="primary" density="compact">
       <v-app-bar-title>DA-Frontend-Vue-Template</v-app-bar-title>
 
-      <router-link to="/about" v-slot="{ href, route, navigate }">
+      <router-link to="/logged-in" v-slot="{ href, route, navigate }">
+        <v-btn :href="href" @click="navigate">
+          {{ route.name }}
+        </v-btn>
+      </router-link>
+
+      <router-link to="/just-teacher" v-slot="{ href, route, navigate }">
         <v-btn :href="href" @click="navigate">
           {{ route.name }}
         </v-btn>
