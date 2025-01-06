@@ -1,18 +1,19 @@
-import { ref } from 'vue'
-import { defineStore } from 'pinia'
-import axios, { type AxiosResponse } from 'axios'
-import type { LoginRequest } from '@/types/LoginRequest.ts'
-import type { Authentication } from '@/types/Authentication.ts'
-import { Roles } from '@/enum/Roles.ts'
+import { ref } from "vue"
+import { defineStore } from "pinia"
+import axios, { type AxiosResponse } from "axios"
+import type { LoginRequest } from "@/types/LoginRequest.ts"
+import type { Authentication } from "@/types/Authentication.ts"
+import { Roles } from "@/enum/Roles.ts"
+import type { RouteLocationResolvedGeneric } from "vue-router"
 
-export const useAuthenticationStore = defineStore('authentication', () => {
+export const useAuthenticationStore = defineStore("authentication", () => {
   const loggedIn = ref(false)
   const role = ref<Roles | null>(null)
 
   //const doubleCount = computed(() => count.value * 2)
   async function login(loginRequest: LoginRequest): Promise<boolean> {
     const response = await axios.post<Authentication, AxiosResponse<Authentication>, LoginRequest>(
-      '/auth/login',
+      "/auth/login",
       loginRequest,
     )
     if (response.status == 200) {
@@ -23,7 +24,7 @@ export const useAuthenticationStore = defineStore('authentication', () => {
   }
 
   async function logout(): Promise<boolean> {
-    const response = await axios.get<string>('/auth/logout')
+    const response = await axios.get<string>("/auth/logout")
     if (response.status == 200) {
       loggedIn.value = false
       role.value = null
@@ -35,10 +36,10 @@ export const useAuthenticationStore = defineStore('authentication', () => {
   function setAuthentication(data: Authentication) {
     const authorities = data.authorities.map((value) => value.authority)
     console.log(authorities)
-    if (authorities.includes('ROLE_LEHRER')) {
+    if (authorities.includes("ROLE_LEHRER")) {
       loggedIn.value = true
       role.value = Roles.TEACHER
-    } else if (authorities.includes('ROLE_SCHUELER')) {
+    } else if (authorities.includes("ROLE_SCHUELER")) {
       loggedIn.value = true
       role.value = Roles.STUDENT
     } else {
@@ -47,22 +48,36 @@ export const useAuthenticationStore = defineStore('authentication', () => {
     }
   }
 
+  function isRouteVisible(route: RouteLocationResolvedGeneric): boolean {
+    console.log("route", route)
+    if (
+      route.meta?.role != undefined &&
+      Array.isArray(route.meta.role) &&
+      route.meta.role.length > 0 &&
+      (!loggedIn.value || !route.meta.role.includes(role.value))
+    ) {
+      return false
+    } else {
+      return true
+    }
+  }
+
   async function checkLoggedIn() {
     axios
-      .get<Authentication>('/')
+      .get<Authentication>("/")
       .then((response) => {
-        console.log('checkLoggedIn returned with ok ', response)
+        console.log("checkLoggedIn returned with ok ", response)
         if (response.status == 200) {
           setAuthentication(response.data)
         }
         console.log(response)
       })
       .catch((err) => {
-        console.log('checkLoggedIn returned with error ', err)
+        console.log("checkLoggedIn returned with error ", err)
       })
   }
 
   void checkLoggedIn()
 
-  return { loggedIn, login, logout }
+  return { loggedIn, login, logout, role, isRouteVisible }
 })

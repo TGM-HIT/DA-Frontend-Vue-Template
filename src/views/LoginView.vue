@@ -1,15 +1,15 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import { useAuthenticationStore } from '@/stores/AuthenticationStore.ts'
-import type { LoginRequest } from '@/types/LoginRequest.ts'
-import { useRouter } from 'vue-router'
+import { ref } from "vue"
+import { useAuthenticationStore } from "@/stores/AuthenticationStore.ts"
+import type { LoginRequest } from "@/types/LoginRequest.ts"
+import { useRouter } from "vue-router"
 
 const authenticationStore = useAuthenticationStore()
 const router = useRouter()
 
 const form = ref<LoginRequest>({
-  username: 'mpointner@tgm.ac.at',
-  password: 'sdfsdfs',
+  username: "mpointner@tgm.ac.at",
+  password: "sdfsdfs",
   simulate: true,
 })
 
@@ -23,6 +23,7 @@ async function login() {
 
 <template>
   <v-sheet class="mx-auto" width="300">
+    <h1>Login</h1>
     <form>
       <v-text-field v-model="form.username" label="Username" required></v-text-field>
 
@@ -35,7 +36,7 @@ async function login() {
 
       <v-checkbox v-model="form.simulate" label="Simulate Login"></v-checkbox>
 
-      <v-btn @click="login"> submit </v-btn>
+      <v-btn @click="login">Login</v-btn>
     </form>
   </v-sheet>
 </template>
