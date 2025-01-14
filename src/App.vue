@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
-import { useTheme } from 'vuetify'
-import { useAuthenticationStore } from '@/stores/AuthenticationStore.ts'
-import Snackbar from '@/components/SnackbarDisplayer.vue'
-import { ref } from 'vue'
+import { RouterLink, RouterView } from "vue-router"
+import { useTheme } from "vuetify"
+import { useAuthenticationStore } from "@/stores/AuthenticationStore.ts"
+import Snackbar from "@/components/SnackbarDisplayer.vue"
+import { ref } from "vue"
 
 const auth = useAuthenticationStore()
 
@@ -12,7 +12,7 @@ const theme = useTheme()
 const drawer = ref<boolean>(false)
 
 function toggleTheme() {
-  theme.global.name.value = theme.global.current.value.dark ? 'light' : 'dark'
+  theme.global.name.value = theme.global.current.value.dark ? "light" : "dark"
 }
 </script>
 

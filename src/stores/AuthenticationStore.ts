@@ -5,10 +5,14 @@ import type { LoginRequest } from "@/types/LoginRequest.ts"
 import type { Authentication } from "@/types/Authentication.ts"
 import { Roles } from "@/enum/Roles.ts"
 import type { RouteLocationResolvedGeneric } from "vue-router"
+import { useSnackbarStore } from "@/stores/SnackbarStore.ts"
+import router from "@/router"
 
 export const useAuthenticationStore = defineStore("authentication", () => {
   const loggedIn = ref(false)
   const role = ref<Roles | null>(null)
+
+  const snackbarStore = useSnackbarStore()
 
   //const doubleCount = computed(() => count.value * 2)
   async function login(loginRequest: LoginRequest): Promise<boolean> {
@@ -28,6 +32,8 @@ export const useAuthenticationStore = defineStore("authentication", () => {
     if (response.status == 200) {
       loggedIn.value = false
       role.value = null
+      snackbarStore.push("Sie wurden erfolgreich ausgeloggt!")
+      await router.push("/")
       return true
     }
     return false
@@ -35,11 +41,10 @@ export const useAuthenticationStore = defineStore("authentication", () => {
 
   function setAuthentication(data: Authentication) {
     const authorities = data.authorities.map((value) => value.authority)
-    console.log(authorities)
-    if (authorities.includes("ROLE_LEHRER")) {
+    if (authorities.includes("ROLE_TEACHER")) {
       loggedIn.value = true
       role.value = Roles.TEACHER
-    } else if (authorities.includes("ROLE_SCHUELER")) {
+    } else if (authorities.includes("ROLE_STUDENT")) {
       loggedIn.value = true
       role.value = Roles.STUDENT
     } else {
@@ -49,7 +54,6 @@ export const useAuthenticationStore = defineStore("authentication", () => {
   }
 
   function isRouteVisible(route: RouteLocationResolvedGeneric): boolean {
-    console.log("route", route)
     if (
       route.meta?.role != undefined &&
       Array.isArray(route.meta.role) &&
@@ -66,11 +70,9 @@ export const useAuthenticationStore = defineStore("authentication", () => {
     axios
       .get<Authentication>("/")
       .then((response) => {
-        console.log("checkLoggedIn returned with ok ", response)
         if (response.status == 200) {
           setAuthentication(response.data)
         }
-        console.log(response)
       })
       .catch((err) => {
         console.log("checkLoggedIn returned with error ", err)
