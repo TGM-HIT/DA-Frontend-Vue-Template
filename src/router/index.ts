@@ -47,15 +47,15 @@ router.beforeResolve((to, from, next) => {
   const auth = useAuthenticationStore()
   const snackbar = useSnackbarStore()
   if (
-    (to.meta?.authRequired == true && !auth.loggedIn) ||
-    (to.meta?.role != undefined &&
-      Array.isArray(to.meta.role) &&
-      to.meta.role.length > 0 &&
-      !auth.loggedIn)
+    auth.loaded && // If Authentication is not loaded preferred to let navigation through and redirect later if first data call returns with 401 or 403.
+    !auth.loggedIn &&
+    (to.meta?.authRequired == true ||
+      (to.meta?.role != undefined && Array.isArray(to.meta.role) && to.meta.role.length > 0))
   ) {
     snackbar.push("Sie müssen sich einloggen, um diese Seite anzuzeigen.")
     router.push({ name: "login" })
   } else if (
+    auth.loaded && // If Authentication is not loaded preferred to let navigation through and redirect later if first data call returns with 401 or 403.
     to.meta?.role != undefined &&
     Array.isArray(to.meta.role) &&
     to.meta.role.length > 0 &&

@@ -65,10 +65,13 @@ function toggleTheme() {
 
     <v-main>
       <RouterView v-slot="{ Component }">
-        <Suspense>
-          <component :is="Component" />
-          <template #fallback></template>
-        </Suspense>
+        <template v-if="Component">
+          <Transition mode="out-in">
+            <Suspense>
+              <component :is="Component"></component>
+            </Suspense>
+          </Transition>
+        </template>
       </RouterView>
     </v-main>
   </v-layout>
