@@ -7,17 +7,23 @@ import { Roles } from "@/enum/Roles.ts"
 import { useAuthenticationStore } from "@/stores/AuthenticationStore.ts"
 import { useSnackbarStore } from "@/stores/SnackbarStore.ts"
 
+export enum Menus {
+  Main,
+  Drawer,
+  TopRight,
+}
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: "/",
-      name: "home",
+      name: "Home",
       component: HomeView,
     },
     {
       path: "/logged-in",
-      name: "logged-in",
+      name: "Logged-in area",
       // route level code-splitting
       // this generates a separate chunk (About.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
@@ -28,7 +34,7 @@ const router = createRouter({
     },
     {
       path: "/just-teacher",
-      name: "teacher",
+      name: "Just Teacher",
       component: TeacherView,
       meta: {
         authRequired: true,
@@ -37,8 +43,11 @@ const router = createRouter({
     },
     {
       path: "/login",
-      name: "login",
+      name: "Login",
       component: LoginView,
+      meta: {
+        menu: Menus.TopRight,
+      },
     },
   ],
 })
@@ -54,7 +63,7 @@ router.beforeResolve((to, from, next) => {
       !auth.loggedIn)
   ) {
     snackbar.push("Sie müssen sich einloggen, um diese Seite anzuzeigen.")
-    router.push({ name: "login" })
+    router.push("/login")
   } else if (
     to.meta?.role != undefined &&
     Array.isArray(to.meta.role) &&

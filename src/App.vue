@@ -1,23 +1,76 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from "vue-router"
-import { useTheme } from "vuetify"
+import { type RouteRecord, useRouter } from "vue-router"
+//import { useTheme } from "vuetify"
 import { useAuthenticationStore } from "@/stores/AuthenticationStore.ts"
-import Snackbar from "@/components/SnackbarDisplayer.vue"
+//import Snackbar from "@/components/SnackbarDisplayer.vue"
 import { ref } from "vue"
+import Menubar from "primevue/menubar"
+import { Menus } from "@/router"
+import type { MenuItem } from "primevue/menuitem"
 
 const auth = useAuthenticationStore()
-
-const theme = useTheme()
+const router = useRouter()
+//const theme = useTheme()
 
 const drawer = ref<boolean>(false)
 
 function toggleTheme() {
   theme.global.name.value = theme.global.current.value.dark ? "light" : "dark"
 }
+
+function filterRoute(menu = Menus.Main): (route: RouteRecord) => boolean {
+  return (route: RouteRecord) =>
+    (route.meta?.menu ?? Menus.Main) == menu && auth.isRouteVisible(route)
+}
+
+function routeToMenuItem(route: RouteRecord): MenuItem {
+  return <MenuItem>{
+    label: route.name,
+    route: route.path,
+  }
+}
+
+const routes = router.getRoutes()
+const items = routes.filter(filterRoute(Menus.Main)).map(routeToMenuItem)
+const topRightMenuItems = routes.filter(filterRoute(Menus.TopRight)).map(routeToMenuItem)
 </script>
 
 <template>
-  <v-layout>
+  <Menubar :model="items" class="p-menubar-fixed">
+    <template #start>
+      <img
+        src="https://www.tgm.ac.at/wp-content/uploads/2022/03/cropped-tgm_logo_300dpi.jpg"
+        height="36"
+      />
+    </template>
+    <template #item="{ item, props }">
+      <router-link v-if="item.route" v-slot="{ href, navigate }" :to="item.route" custom>
+        <a v-ripple :href="href" v-bind="props.action" @click="navigate">
+          <span>{{ item.label }}</span>
+        </a>
+      </router-link>
+    </template>
+    <template #end>
+      <ul class="p-menubar-root-list">
+        <li class="p-menubar-item">
+          <div class="p-menubar-item-content">
+            <router-link
+              v-for="item in topRightMenuItems"
+              v-slot="{ href, navigate }"
+              :to="item.route"
+              custom
+            >
+              <a v-ripple :href="href" class="p-menubar-item-link" @click="navigate">
+                <span>{{ item.label }}</span>
+              </a>
+            </router-link>
+          </div>
+        </li>
+      </ul>
+    </template>
+  </Menubar>
+  <router-view></router-view>
+  <!--<v-layout>
     <v-app-bar color="primary" density="compact">
       <template v-slot:image>
         <v-img
@@ -71,8 +124,8 @@ function toggleTheme() {
         </Suspense>
       </RouterView>
     </v-main>
-  </v-layout>
-  <snackbar></snackbar>
+  </v-layout>-->
+  <!--<snackbar></snackbar>-->
 </template>
 
 <style scoped>

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import axios from "axios"
 import { ref } from "vue"
+import Button from "primevue/button"
 
 const currentUser = ref(null)
 
@@ -16,6 +17,7 @@ await load()
 <template>
   <main>
     <h1>Startseite</h1>
+    <Button>Verify</Button>
     {{ currentUser }}
   </main>
 </template>
