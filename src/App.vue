@@ -1,23 +1,35 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from "vue-router"
-import { useTheme } from "vuetify"
+import M from "materialize-css"
 import { useAuthenticationStore } from "@/stores/AuthenticationStore.ts"
 import Snackbar from "@/components/SnackbarDisplayer.vue"
-import { ref } from "vue"
+import { onMounted, ref } from "vue"
+import Menu from "@/components/Menu.vue"
 
 const auth = useAuthenticationStore()
-
-const theme = useTheme()
 
 const drawer = ref<boolean>(false)
 
 function toggleTheme() {
-  theme.global.name.value = theme.global.current.value.dark ? "light" : "dark"
+  //theme.global.name.value = theme.global.current.value.dark ? "light" : "dark"
 }
+
+onMounted(() => {
+  M.AutoInit()
+})
 </script>
 
 <template>
-  <v-layout>
+  <Menu />
+  <RouterView v-slot="{ Component }">
+    <template v-if="Component">
+      <Transition mode="out-in">
+        <Suspense>
+          <component :is="Component"></component>
+        </Suspense>
+      </Transition>
+    </template>
+  </RouterView>
+  <!--<v-layout>
     <v-app-bar color="primary" density="compact">
       <template v-slot:image>
         <v-img
@@ -36,6 +48,12 @@ function toggleTheme() {
         </router-link>
 
         <router-link to="/just-teacher" v-slot="{ href, route, navigate }">
+          <v-btn :href="href" @click="navigate" v-if="auth.isRouteVisible(route)">
+            {{ route.name }}
+          </v-btn>
+        </router-link>
+
+        <router-link to="/item" v-slot="{ href, route, navigate }">
           <v-btn :href="href" @click="navigate" v-if="auth.isRouteVisible(route)">
             {{ route.name }}
           </v-btn>
@@ -74,7 +92,7 @@ function toggleTheme() {
         </template>
       </RouterView>
     </v-main>
-  </v-layout>
+  </v-layout>-->
   <snackbar></snackbar>
 </template>
 

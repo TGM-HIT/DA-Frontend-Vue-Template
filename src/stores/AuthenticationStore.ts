@@ -4,7 +4,7 @@ import axios, { type AxiosResponse } from "axios"
 import type { LoginRequest } from "@/types/LoginRequest.ts"
 import type { Authentication } from "@/types/Authentication.ts"
 import { Roles } from "@/enum/Roles.ts"
-import type { RouteLocationResolvedGeneric } from "vue-router"
+import type { RouteLocationResolvedGeneric, RouteRecord } from "vue-router"
 import { useSnackbarStore } from "@/stores/SnackbarStore.ts"
 import router from "@/router"
 
@@ -55,7 +55,7 @@ export const useAuthenticationStore = defineStore("authentication", () => {
     loaded.value = true
   }
 
-  function isRouteVisible(route: RouteLocationResolvedGeneric): boolean {
+  function isRouteVisible(route: RouteLocationResolvedGeneric | RouteRecord): boolean {
     if (
       route.meta?.role != undefined &&
       Array.isArray(route.meta.role) &&

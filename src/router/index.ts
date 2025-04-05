@@ -6,18 +6,19 @@ import LoggedInView from "@/views/LoggedInView.vue"
 import { Roles } from "@/enum/Roles.ts"
 import { useAuthenticationStore } from "@/stores/AuthenticationStore.ts"
 import { useSnackbarStore } from "@/stores/SnackbarStore.ts"
+import ItemView from "@/views/ItemView.vue"
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: "/",
-      name: "home",
+      name: "Home",
       component: HomeView,
     },
     {
       path: "/logged-in",
-      name: "logged-in",
+      name: "Logged-in",
       // route level code-splitting
       // this generates a separate chunk (About.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
@@ -28,8 +29,17 @@ const router = createRouter({
     },
     {
       path: "/just-teacher",
-      name: "teacher",
+      name: "Teacher",
       component: TeacherView,
+      meta: {
+        authRequired: true,
+        role: [Roles.TEACHER],
+      },
+    },
+    {
+      path: "/item",
+      name: "item",
+      component: ItemView,
       meta: {
         authRequired: true,
         role: [Roles.TEACHER],
