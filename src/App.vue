@@ -5,6 +5,8 @@ import { useAuthenticationStore } from "@/stores/AuthenticationStore.ts"
 //import Snackbar from "@/components/SnackbarDisplayer.vue"
 import { ref } from "vue"
 import Menubar from "primevue/menubar"
+import Button from "primevue/button"
+import InputText from "primevue/inputtext"
 import { Menus } from "@/router"
 import type { MenuItem } from "primevue/menuitem"
 
@@ -15,7 +17,7 @@ const router = useRouter()
 const drawer = ref<boolean>(false)
 
 function toggleTheme() {
-  theme.global.name.value = theme.global.current.value.dark ? "light" : "dark"
+  //theme.global.name.value = theme.global.current.value.dark ? "light" : "dark"
 }
 
 function filterRoute(menu = Menus.Main): (route: RouteRecord) => boolean {
@@ -36,7 +38,7 @@ const topRightMenuItems = routes.filter(filterRoute(Menus.TopRight)).map(routeTo
 </script>
 
 <template>
-  <Menubar :model="items" class="p-menubar-fixed">
+  <Menubar :model="items" class="p-menubar-fixed" breakpoint="500px">
     <template #start>
       <img
         src="https://www.tgm.ac.at/wp-content/uploads/2022/03/cropped-tgm_logo_300dpi.jpg"
@@ -51,22 +53,20 @@ const topRightMenuItems = routes.filter(filterRoute(Menus.TopRight)).map(routeTo
       </router-link>
     </template>
     <template #end>
-      <ul class="p-menubar-root-list">
-        <li class="p-menubar-item">
-          <div class="p-menubar-item-content">
-            <router-link
-              v-for="item in topRightMenuItems"
-              v-slot="{ href, navigate }"
-              :to="item.route"
-              custom
-            >
-              <a v-ripple :href="href" class="p-menubar-item-link" @click="navigate">
-                <span>{{ item.label }}</span>
-              </a>
-            </router-link>
-          </div>
-        </li>
-      </ul>
+      <div style="display: flex; flex-direction: row">
+        <InputText placeholder="Search" type="text" class="w-32 sm:w-auto" />
+        <router-link
+          v-for="item in topRightMenuItems"
+          :key="item.route"
+          v-slot="{ href, navigate }"
+          :to="item.route"
+          custom
+        >
+          <a v-ripple :href="href" class="p-menubar-item-link" @click="navigate">
+            <Button :label="item.label" icon="pi pi-user" variant="text" />
+          </a>
+        </router-link>
+      </div>
     </template>
   </Menubar>
   <router-view></router-view>
@@ -133,5 +133,10 @@ const topRightMenuItems = routes.filter(filterRoute(Menus.TopRight)).map(routeTo
   color: inherit;
   text-decoration-color: inherit;
   text-decoration: inherit;
+}
+
+.p-menubar {
+  border-radius: 0;
+  border: 0;
 }
 </style>

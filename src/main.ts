@@ -1,12 +1,8 @@
-import "./assets/main.css"
+import "primeicons/primeicons.css"
+import "./assets/main.scss"
 
 import { createApp } from "vue"
 import { createPinia } from "pinia"
-/*import { createVuetify } from "vuetify"
-import * as components from "vuetify/components"
-import * as directives from "vuetify/directives"
-import "vuetify/styles"
-import "@mdi/font/css/materialdesignicons.css"*/
 import PrimeVue from "primevue/config"
 import Aura from "@primevue/themes/aura"
 
@@ -20,6 +16,10 @@ const app = createApp(App)
 app.use(createPinia())
 //app.use(createVuetify({ components, directives, theme: { defaultTheme: "light" } }))
 app.use(PrimeVue, {
+  autoImport: true,
+  components: {
+    include: "*",
+  },
   theme: {
     preset: Aura,
     options: {
