@@ -3,8 +3,6 @@ import { reactive } from "vue"
 import { useAuthenticationStore } from "@/stores/AuthenticationStore.ts"
 import type { LoginRequest } from "@/types/LoginRequest.ts"
 import { useRouter } from "vue-router"
-import Card from "primevue/card"
-import InputText from "primevue/inputtext"
 
 const authenticationStore = useAuthenticationStore()
 const router = useRouter()
@@ -16,7 +14,7 @@ const form = reactive<LoginRequest>({
 })
 
 async function login() {
-  const sucessful = await authenticationStore.login(form.value)
+  const sucessful = await authenticationStore.login(form)
   if (sucessful) {
     router.back()
   }

@@ -6,7 +6,6 @@ import { useAuthenticationStore } from "@/stores/AuthenticationStore.ts"
 import { ref } from "vue"
 import Menubar from "primevue/menubar"
 import Button from "primevue/button"
-import InputText from "primevue/inputtext"
 import { Menus } from "@/router"
 import type { MenuItem } from "primevue/menuitem"
 
@@ -54,7 +53,6 @@ const topRightMenuItems = routes.filter(filterRoute(Menus.TopRight)).map(routeTo
     </template>
     <template #end>
       <div style="display: flex; flex-direction: row">
-        <InputText placeholder="Search" type="text" class="w-32 sm:w-auto" />
         <router-link
           v-for="item in topRightMenuItems"
           :key="item.route"
