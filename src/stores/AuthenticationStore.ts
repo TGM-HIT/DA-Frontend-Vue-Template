@@ -11,7 +11,7 @@ import router from "@/router"
 export const useAuthenticationStore = defineStore("authentication", () => {
   const loaded = ref(false)
   const loggedIn = ref(false)
-  const role = ref<Roles | null>(null)
+  const roles = ref<Roles[]>([])
 
   const snackbarStore = useSnackbarStore()
 
@@ -29,10 +29,10 @@ export const useAuthenticationStore = defineStore("authentication", () => {
   }
 
   async function logout(): Promise<boolean> {
-    const response = await axios.get<string>("/auth/logout")
+    const response = await axios.post<string>("/auth/logout")
     if (response.status == 200) {
       loggedIn.value = false
-      role.value = null
+      roles.value = []
       snackbarStore.push("Sie wurden erfolgreich ausgeloggt!")
       await router.push("/")
       return true
@@ -41,26 +41,33 @@ export const useAuthenticationStore = defineStore("authentication", () => {
   }
 
   function setAuthentication(data: Authentication) {
-    const authorities = data.authorities.map((value) => value.authority)
-    if (authorities.includes("ROLE_TEACHER")) {
-      loggedIn.value = true
-      role.value = Roles.TEACHER
-    } else if (authorities.includes("ROLE_STUDENT")) {
-      loggedIn.value = true
-      role.value = Roles.STUDENT
-    } else {
+    if (!data.authenticated) {
       loggedIn.value = false
-      role.value = null
+      roles.value = []
+    } else {
+      const authorities = data.authorities.map((value) => value.authority)
+      const newRoles = []
+      if (authorities.includes("ROLE_TEACHER")) {
+        newRoles.push(Roles.TEACHER)
+      }
+      if (authorities.includes("ROLE_STUDENT")) {
+        newRoles.push(Roles.STUDENT)
+      }
+      if (authorities.includes("ROLE_ADMIN")) {
+        newRoles.push(Roles.ADMIN)
+      }
+      loggedIn.value = true
+      roles.value = newRoles
     }
     loaded.value = true
   }
 
   function isRouteVisible(route: RouteLocationResolvedGeneric): boolean {
     if (
-      route.meta?.role != undefined &&
-      Array.isArray(route.meta.role) &&
-      route.meta.role.length > 0 &&
-      (!loggedIn.value || !route.meta.role.includes(role.value))
+      route.meta?.roles != undefined &&
+      Array.isArray(route.meta.roles) &&
+      route.meta.roles.length > 0 &&
+      (!loggedIn.value || !route.meta.roles.some((role) => roles.value.includes(role)))
     ) {
       return false
     } else {
@@ -78,5 +85,5 @@ export const useAuthenticationStore = defineStore("authentication", () => {
 
   void checkLoggedIn()
 
-  return { loaded, loggedIn, login, logout, role, isRouteVisible }
+  return { loaded, loggedIn, login, logout, roles, isRouteVisible }
 })

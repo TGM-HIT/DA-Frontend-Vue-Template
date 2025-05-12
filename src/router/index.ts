@@ -32,7 +32,7 @@ const router = createRouter({
       component: TeacherView,
       meta: {
         authRequired: true,
-        role: [Roles.TEACHER],
+        roles: [Roles.TEACHER],
       },
     },
     {
@@ -50,16 +50,16 @@ router.beforeResolve((to, from, next) => {
     auth.loaded && // If Authentication is not loaded preferred to let navigation through and redirect later if first data call returns with 401 or 403.
     !auth.loggedIn &&
     (to.meta?.authRequired == true ||
-      (to.meta?.role != undefined && Array.isArray(to.meta.role) && to.meta.role.length > 0))
+      (to.meta?.roles != undefined && Array.isArray(to.meta.roles) && to.meta.roles.length > 0))
   ) {
     snackbar.push("Sie müssen sich einloggen, um diese Seite anzuzeigen.")
     router.push({ name: "login" })
   } else if (
     auth.loaded && // If Authentication is not loaded preferred to let navigation through and redirect later if first data call returns with 401 or 403.
-    to.meta?.role != undefined &&
-    Array.isArray(to.meta.role) &&
-    to.meta.role.length > 0 &&
-    !to.meta.role.includes(auth.role)
+    to.meta?.roles != undefined &&
+    Array.isArray(to.meta.roles) &&
+    to.meta.roles.length > 0 &&
+    !to.meta.roles.some((role) => auth.roles.includes(role))
   ) {
     snackbar.push("Sie haben nicht die notwendigen Berechtigungen, um diese Seite aufzurufen.")
     router.push("/login")
